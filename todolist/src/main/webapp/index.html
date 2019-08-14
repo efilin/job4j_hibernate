@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOList</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(readData());
+
+        function clearTable() {
+            $("#table").find("tr:gt(0)").remove();
+        }
+
+        function readData() {
+            $.ajax({
+                method: "get",
+                url: "todolist",
+                contentType: "text/json",
+                complete: function (data) {
+                    clearTable();
+                    var items = JSON.parse(data.responseText);
+                    for (var i = 0; i !== items.length; ++i) {
+                        var desc = items[i].desc;
+                        var created = new Date(items[i].created).toLocaleString();
+                        var check = '';
+                        if (items[i].done) {
+                            check = 'checked';
+                        }
+                        var checkBox = document.getElementById("showAll");
+                        if (checkBox.checked === true || (checkBox.checked === false && !items[i].done)) {
+                            $('#table tr:last')
+                                .after('<tr><td>' + desc + '</td><td>' + created + '</td><td><input type="checkbox" disabled ' + check + '/></td></tr>');
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+</div>
+<div class="container">
+    <h1>TODOList</h1>
+    <h2> Новое задание: </h2>
+    <form class="form-inline" action="/todolist" method="post" title="Добавить новое задание"
+          id="formAdd">
+        <div class="form-group">
+            <label for="desc">Описание:</label>
+            <textarea class="form-control" rows="3" cols="60" name="desc" title="Описание" id="desc"></textarea>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" name="done" value="true">Выполнено</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить задание</button>
+    </form>
+    <div class="checkbox">
+        <label><input type="checkbox" id="showAll" onclick="readData();">Отбразить все задания</label>
+    </div>
+    <h2> Список всех заданий:</h2>
+    <table class="table table-bordered" id='table'>
+        <thead>
+        <tr>
+            <th>Описание задания</th>
+            <th>Создано</th>
+            <th>Выполнено</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
