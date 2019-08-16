@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class DbStore implements Store {
 
@@ -25,33 +26,26 @@ public class DbStore implements Store {
 
     @Override
     public void addItem(Item item) {
-        final Session session = factory.openSession();
-        final Transaction tx = session.beginTransaction();
-        try {
-            session.save(item);
-            tx.commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
+        this.tx(session -> session.save(item));
     }
 
     @Override
     public List<Item> getAllItems() {
-        List<Item> resultList;
+        return this.tx(session -> session.createQuery("from Item").list());
+    }
+
+    private <T> T tx(final Function<Session, T> command) {
         final Session session = factory.openSession();
         final Transaction tx = session.beginTransaction();
         try {
-            resultList = session.createQuery("from Item").list();
-            session.getTransaction().commit();
-        } catch (Exception e) {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
             session.getTransaction().rollback();
             throw e;
         } finally {
             session.close();
         }
-        return resultList;
     }
 }
