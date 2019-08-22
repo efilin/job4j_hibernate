@@ -15,15 +15,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ItemsServlet extends HttpServlet {
 
     private final Validate validate = ValidateService.getInstance();
-    private List<Item> items = new CopyOnWriteArrayList<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.items = this.validate.getAllItems();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
         ObjectMapper mapper = new ObjectMapper();
+        List<Item> items = this.validate.getAllItems();
         mapper.writeValue(writer, items);
         writer.flush();
     }
