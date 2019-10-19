@@ -10,5 +10,7 @@
         <mapping class="ru.job4j.carstorage.models.Engine"/>
         <mapping class="ru.job4j.carstorage.models.Transmission"/>
         <mapping class="ru.job4j.carstorage.models.CarBody"/>
+        <mapping class="ru.job4j.carsalesplatform.model.Seller"/>
+        <mapping class="ru.job4j.carsalesplatform.model.SellingCar"/>
     </session-factory>
 </hibernate-configuration>
