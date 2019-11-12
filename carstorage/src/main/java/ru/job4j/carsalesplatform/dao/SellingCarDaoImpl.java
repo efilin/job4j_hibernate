@@ -6,6 +6,9 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import ru.job4j.carsalesplatform.model.SellingCar;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -44,6 +47,25 @@ public class SellingCarDaoImpl implements SellingCarDao {
     @Override
     public List<SellingCar> findAllCars() {
         return this.tx(session -> session.createQuery("from SellingCar ").list());
+    }
+
+    @Override
+    public List<SellingCar> findCarsWithPhoto() {
+        return this.tx(session -> session.createQuery("from SellingCar sc where sc.photo!=''").list());
+    }
+
+    @Override
+    public List<SellingCar> findLastDayCars() {
+        LocalDate date = LocalDateTime.now().toLocalDate();
+        Timestamp currentDateTime = Timestamp.valueOf(date.atStartOfDay());
+        String query = String.format("from SellingCar sc where sc.created > '%s'", currentDateTime);
+        return this.tx(session -> session.createQuery(query).list());
+    }
+
+    @Override
+    public List<SellingCar> findCurrentManufacturerCars(String manufacturer) {
+        String query = String.format("from SellingCar  sc where sc.manufacturer = '%s'", manufacturer);
+        return this.tx(session -> session.createQuery(query).list());
     }
 
     @Override

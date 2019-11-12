@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "s_car")
@@ -32,4 +33,5 @@ public class SellingCar {
     private Seller seller;
     @Column(name = "on_sale")
     private boolean onSale;
+    private Timestamp created;
 }

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,18 +55,22 @@ public class AddCarServlet extends HttpServlet {
                 } else {
                     String fieldName = item.getFieldName();
                     String extension = FilenameUtils.getExtension(item.getName());
-                    String fileName = String.format("photo-%s.%s", String.valueOf(System.currentTimeMillis()), extension);
-                    String uploadString = System.getProperty("java.io.tmpdir") + File.separator + "photo";
-                    Path uploadPath = Paths.get(uploadString);
-                    Path path = Paths.get(uploadString, fileName);
+                    if (extension.isEmpty()) {
+                        paramsMap.put(fieldName, "");
+                    } else {
+                        String fileName = String.format("photo-%s.%s", String.valueOf(System.currentTimeMillis()), extension);
+                        String uploadString = System.getProperty("java.io.tmpdir") + File.separator + "photo";
+                        Path uploadPath = Paths.get(uploadString);
+                        Path path = Paths.get(uploadString, fileName);
 
-                    try (InputStream fileContent = item.getInputStream()) {
-                        if (!Files.exists(uploadPath)) {
-                            Files.createDirectories(uploadPath);
+                        try (InputStream fileContent = item.getInputStream()) {
+                            if (!Files.exists(uploadPath)) {
+                                Files.createDirectories(uploadPath);
+                            }
+                            Files.copy(fileContent, path);
                         }
-                        Files.copy(fileContent, path);
+                        paramsMap.put(fieldName, path.toString());
                     }
-                    paramsMap.put(fieldName, path.toString());
                 }
             }
         } catch (FileUploadException e) {
@@ -83,6 +88,7 @@ public class AddCarServlet extends HttpServlet {
         sellingCar.setTransmission(paramsMap.get("transmission"));
         sellingCar.setDescription(paramsMap.get("description"));
         sellingCar.setOnSale(true);
+        sellingCar.setCreated(new Timestamp(System.currentTimeMillis()));
 
         HttpSession session = req.getSession();
         String login = (String) session.getAttribute("login");
@@ -95,5 +101,5 @@ public class AddCarServlet extends HttpServlet {
 
         paramsMap.clear();
         resp.sendRedirect(String.format("%s/carslist", req.getContextPath()));
-        }
+    }
 }

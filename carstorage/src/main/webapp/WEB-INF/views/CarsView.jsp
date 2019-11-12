@@ -16,6 +16,32 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $("#filter").on("change", function () {
+                var dop = document.getElementById("filter").value;
+                if (dop === 'currentManufacturer') {
+                    readData();
+                }
+            });
+        });
+
+
+        function readData() {
+            $.ajax({
+                method: "get",
+                url: "manufacturer",
+                contentType: "text/json",
+                complete: function (data) {
+                    var json = JSON.parse(data.responseText);
+                    var $jsontwo = $("#manufacturers");
+                    $jsontwo.empty();
+                    $.each(json, function (index, value) {
+                        $jsontwo.append("<option value=" + value + ">" + value + "</option>");
+                    });
+
+                }
+            })
+        }
     </script>
 </head>
 <body>
@@ -32,10 +58,32 @@
 <div class="container-fluid">
 </div>
 <br>
+
 <div class="container">
     <form class="form-inline" action="logout" method="post" id="logout">
         <button type="submit" class="btn btn-primary">Logout</button>
     </form>
+
+    <div class="container">
+        <form class="form-inline" action="carslist" method="post">
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="filter" id="filter">
+                    <option value="allCars" selected>Показать все объявления</option>
+                    <option value="lastDay">Объявления за последний день</option>
+                    <option value="withPhoto">Объявления с фото</option>
+                    <option value="currentManufacturer">Конкретного производителя</option>
+                </select>
+            </div>
+            <select class="form-control" name="manufacturers" id="manufacturers">
+            </select>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
     <h2> Список машин на продажу:</h2>
     <table class="table table-bordered" id='table'>
         <thead>

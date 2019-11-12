@@ -19,6 +19,7 @@ CREATE TABLE s_car (
   description     VARCHAR(100),
   photo           VARCHAR(300),
   seller_id       integer references seller (id),
-  on_sale         BOOLEAN
+  on_sale         BOOLEAN,
+  created         TIMESTAMP
 );
 

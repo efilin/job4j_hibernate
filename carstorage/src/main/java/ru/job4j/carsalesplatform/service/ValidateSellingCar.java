@@ -9,6 +9,9 @@ public interface ValidateSellingCar {
     void updateCar(SellingCar car);
     void deleteCar(SellingCar car);
     List<SellingCar> findAllCars();
+    List<SellingCar> findCarsWithPhoto();
+    List<SellingCar> findLastDayCars();
+    List<SellingCar> findCurrentManufacturerCars(String manufacturer);
     SellingCar findCarById(int id);
     void changeSaleStatus(int id);
 }

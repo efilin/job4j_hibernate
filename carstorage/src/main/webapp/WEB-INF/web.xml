@@ -75,6 +75,15 @@
         <servlet-name>AddCarServlet</servlet-name>
         <url-pattern>/add</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ManufacturerServlet</servlet-name>
+        <servlet-class>ru.job4j.carsalesplatform.controller.ManufacturerServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManufacturerServlet</servlet-name>
+        <url-pattern>/manufacturer</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>WEB-INF/views/CarsView.jsp</welcome-file>
     </welcome-file-list>

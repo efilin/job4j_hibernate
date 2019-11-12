@@ -36,6 +36,21 @@ public class ValidateSellingCarImpl implements ValidateSellingCar {
     }
 
     @Override
+    public List<SellingCar> findCarsWithPhoto() {
+        return this.logic.findCarsWithPhoto();
+    }
+
+    @Override
+    public List<SellingCar> findLastDayCars() {
+        return this.logic.findLastDayCars();
+    }
+
+    @Override
+    public List<SellingCar> findCurrentManufacturerCars(String manufacturer) {
+        return this.logic.findCurrentManufacturerCars(manufacturer);
+    }
+
+    @Override
     public SellingCar findCarById(int id) {
         return this.logic.findCarById(id);
     }
